@@ -1,0 +1,6 @@
+---
+grafana_image_name: grafana/grafana
+grafana_image_tag: 5.4.1
+grafana_image: '{{ grafana_image_name }}:{{ grafana_image_tag }}'
+grafana_container_name: grafana
+grafana_dir: /opt/grafana

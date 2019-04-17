@@ -1,0 +1,69 @@
+---
+- name: Create prometheus dirs
+  notify: restart_prometheus
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0770
+    group: developers
+  with_items:
+    - '{{ prometheus_dir }}/config'
+    - '{{ prometheus_dir }}/config/rules'
+    - '{{ prometheus_dir }}/config/data'
+
+- name: Template prometheus.yml
+  template:
+    src: prometheus.yml
+    dest: '{{ prometheus_dir }}/config/prometheus.yml'
+    mode: 0660
+    group: developers
+
+- name: Copy rules
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: 0660
+    group: developers
+  with_items:
+    - src: recording_rules.yml
+      dest: '{{ prometheus_dir }}/config/rules/recording_rules.yml'
+    - src: alerting_rules.yml
+      dest: '{{ prometheus_dir }}/config/rules/alerting_rules.yml'
+
+- name: Pull docker image
+  docker_image:
+    name: '{{ prometheus_image }}'
+    force: true
+
+- name: Check config
+  docker_container: &prometheus_docker_container
+    image: '{{ prometheus_image }}'
+    name: '{{ prometheus_container_name }}'
+    entrypoint: ''
+    user: root
+    command:
+      - promtool
+      - check
+      - config
+      - '{{ prometheus_dir }}/config/prometheus.yml'
+    detach: false
+    cleanup: true
+    ports:
+      - '9090:9090'
+    volumes:
+      - '{{ prometheus_dir }}/config/:{{ prometheus_dir }}/config/'
+      - '{{ prometheus_dir }}/data/:/prometheus/'
+
+- name: Start container
+  docker_container:
+    <<: *prometheus_docker_container
+    detach: true
+    cleanup: false
+    restart_policy: unless-stopped
+    command:
+      - '/bin/prometheus'
+      - '--config.file={{ prometheus_dir }}/config/prometheus.yml'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=90d'
