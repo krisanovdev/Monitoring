@@ -1,11 +1,10 @@
 ---
 - name: Create prometheus dirs
-  notify: restart_prometheus
   file:
     path: '{{ item }}'
     state: directory
     mode: 0770
-    group: developers
+
   with_items:
     - '{{ prometheus_dir }}/config'
     - '{{ prometheus_dir }}/config/rules'
@@ -16,19 +15,17 @@
     src: prometheus.yml
     dest: '{{ prometheus_dir }}/config/prometheus.yml'
     mode: 0660
-    group: developers
 
-- name: Copy rules
-  copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-    mode: 0660
-    group: developers
-  with_items:
-    - src: recording_rules.yml
-      dest: '{{ prometheus_dir }}/config/rules/recording_rules.yml'
-    - src: alerting_rules.yml
-      dest: '{{ prometheus_dir }}/config/rules/alerting_rules.yml'
+#- name: Copy rules
+#  copy:
+#    src: '{{ item.src }}'
+#    dest: '{{ item.dest }}'
+#    mode: 0660
+#  with_items:
+#    - src: recording_rules.yml
+#      dest: '{{ prometheus_dir }}/config/rules/recording_rules.yml'
+#    - src: alerting_rules.yml
+#      dest: '{{ prometheus_dir }}/config/rules/alerting_rules.yml'
 
 - name: Pull docker image
   docker_image:

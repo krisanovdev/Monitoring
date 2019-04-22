@@ -4,21 +4,18 @@
     path: '{{ grafana_dir }}'
     state: directory
     mode: 0770
-    group: developers
 
 - name: Create data sources dir
   file:
     path: '{{ grafana_dir }}/provisioning/datasources'
     state: directory
     mode: 0770
-    group: developers
 
 - name: Add Grafana config files
   template:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
     mode: 0660
-    group: developers
   with_items:
     - src: datasource.yml
       dest: '{{ grafana_dir }}/provisioning/datasources/datasources.yml'

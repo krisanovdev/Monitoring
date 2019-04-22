@@ -1,0 +1,19 @@
+version: '2.4'
+services:
+  grafana:
+    image: '{{ grafana_image }}'
+    container_name: '{{ grafana_container_name }}'
+    user: root
+    ports:
+      - '3000:3000'
+    volumes:
+      - '{{ grafana_dir }}/data:/var/lib/grafana'
+      - '{{ grafana_dir }}/provisioning/datasources:/etc/grafana/provisioning/datasources'
+    restart: unless-stopped
+    healthcheck:
+      test: 'curl -f -s -i http://localhost:3000/api/health || exit 1'
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
