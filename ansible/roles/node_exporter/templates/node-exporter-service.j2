@@ -1,0 +1,11 @@
+[Unit]
+Description=Node Exporter
+
+[Service]
+Type=simple
+ExecStart={{ node_exporter_binary }}
+SyslogIdentifier=node_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

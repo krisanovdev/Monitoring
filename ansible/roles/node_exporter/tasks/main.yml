@@ -1,0 +1,35 @@
+---
+- name: Create systemd service file
+  become: true
+  template:
+    src: node-exporter-service.j2
+    dest: /etc/systemd/system/node-exporter.service
+    mode: 0400
+    force: true
+
+- name: Download archive
+  get_url:
+    url: 'https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz'
+    dest: /tmp/node_exporter.tar.gz
+    force: true
+
+- name: Extract archive
+  unarchive:
+    remote_src: true
+    src: /tmp/node_exporter.tar.gz
+    dest: /tmp
+    list_files: true
+  register: unarchive_node_exporter
+
+- name: Move node_exporter to bin
+  copy:
+    src: '/tmp/{{ unarchive_node_exporter.files[0] }}/node_exporter'
+    dest: '{{ node_exporter_binary }}'
+    remote_src: true
+    mode: 0755
+
+- name: Start node_exporter
+  service:
+    name: node-exporter
+    state: restarted
+    enabled: true
