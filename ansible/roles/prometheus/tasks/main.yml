@@ -64,3 +64,4 @@
       - '--web.enable-lifecycle'
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention=90d'
+    restart: true

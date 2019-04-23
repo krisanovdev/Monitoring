@@ -3,7 +3,7 @@ Description=Node Exporter
 
 [Service]
 Type=simple
-ExecStart={{ node_exporter_binary }}
+ExecStart={{ node_exporter_binary }} --web.listen-address 0.0.0.0:9100
 SyslogIdentifier=node_exporter
 Restart=always
 

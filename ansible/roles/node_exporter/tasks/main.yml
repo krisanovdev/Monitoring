@@ -29,7 +29,9 @@
     mode: 0755
 
 - name: Start node_exporter
+  become: true
   service:
     name: node-exporter
     state: restarted
     enabled: true
+    daemon_reload: true
