@@ -12,7 +12,7 @@
 
 - name: Template prometheus.yml
   template:
-    src: prometheus.yml
+    src: prometheus.yml.j2
     dest: '{{ prometheus_dir }}/config/prometheus.yml'
     mode: 0660
 
@@ -33,7 +33,7 @@
     force: true
 
 - name: Check config
-  docker_container: &prometheus_docker_container
+  docker_container:
     image: '{{ prometheus_image }}'
     name: '{{ prometheus_container_name }}'
     entrypoint: ''
@@ -45,23 +45,26 @@
       - '{{ prometheus_dir }}/config/prometheus.yml'
     detach: false
     cleanup: true
-    ports:
-      - '9090:9090'
     volumes:
       - '{{ prometheus_dir }}/config/:{{ prometheus_dir }}/config/'
-      - '{{ prometheus_dir }}/data/:/prometheus/'
 
 - name: Start container
   docker_container:
-    <<: *prometheus_docker_container
+    image: '{{ prometheus_image }}'
+    name: '{{ prometheus_container_name }}'
+    user: root
     detach: true
     cleanup: false
     restart_policy: unless-stopped
+    ports:
+      - '9090:9090'
     command:
-      - '/bin/prometheus'
       - '--config.file={{ prometheus_dir }}/config/prometheus.yml'
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.enable-lifecycle'
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention=90d'
+    volumes:
+      - '{{ prometheus_dir }}/config/:{{ prometheus_dir }}/config/'
+      - '{{ prometheus_dir }}/data/:/prometheus/'
     restart: true
