@@ -9,6 +9,7 @@ services:
     volumes:
       - '{{ grafana_dir }}/data:/var/lib/grafana'
       - '{{ grafana_dir }}/provisioning/datasources:/etc/grafana/provisioning/datasources'
+      - '{{ grafana_dir }}/provisioning/dashboards:/etc/grafana/provisioning/dashboards'
     restart: unless-stopped
     healthcheck:
       test: 'curl -f -s -i http://localhost:3000/api/health || exit 1'

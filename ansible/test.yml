@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Test prometheus
+      import_role:
+       name: prometheus
+    - name: Test grafana
+      import_role:
+        name: grafana
+- hosts: node_exporter_targets
+  tasks:
+    - name: Test exporter
+      import_role:
+        name: node_exporter
