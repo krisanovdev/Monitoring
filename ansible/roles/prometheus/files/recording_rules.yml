@@ -1,0 +1,11 @@
+groups:
+  - name: Node exporter
+    rules:
+      - record: job:node_exporter:disk_usage
+        expr: (node_filesystem_size_bytes - node_filesystem_avail_bytes) / node_filesystem_size_bytes{mountpoint !~"(/snap|/run|/var/lib/lxcfs|/boot/efi).*"} * 100
+
+      - record: job:node_exporter:ram_usage
+        expr: (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes) ) / node_memory_MemTotal_bytes * 100
+
+      - record: job:node_exporter:cpu_usage
+        expr: (1 - avg by (instance, environment) (rate(node_cpu_seconds_total{job="node_exporter",mode="idle"}[3m]))) * 100

@@ -17,14 +17,14 @@
     dest: '{{ prometheus_dir }}/config/prometheus.yml'
     mode: 0777
 
-#- name: Copy rules
-#  copy:
-#    src: '{{ item.src }}'
-#    dest: '{{ item.dest }}'
-#    mode: 0660
-#  with_items:
-#    - src: recording_rules.yml
-#      dest: '{{ prometheus_dir }}/config/rules/recording_rules.yml'
+- name: Copy rules
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: 0777
+  with_items:
+    - src: recording_rules.yml
+      dest: '{{ prometheus_dir }}/config/rules/recording_rules.yml'
 #    - src: alerting_rules.yml
 #      dest: '{{ prometheus_dir }}/config/rules/alerting_rules.yml'
 
