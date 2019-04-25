@@ -3,18 +3,19 @@
   file:
     path: '{{ item }}'
     state: directory
-    mode: 0770
+    mode: 0777
 
   with_items:
     - '{{ prometheus_dir }}/config'
     - '{{ prometheus_dir }}/config/rules'
     - '{{ prometheus_dir }}/config/data'
+    - '{{ prometheus_dir }}/data'
 
 - name: Template prometheus.yml
   template:
     src: prometheus.yml.j2
     dest: '{{ prometheus_dir }}/config/prometheus.yml'
-    mode: 0660
+    mode: 0777
 
 #- name: Copy rules
 #  copy:
@@ -52,7 +53,6 @@
   docker_container:
     image: '{{ prometheus_image }}'
     name: '{{ prometheus_container_name }}'
-    user: root
     detach: true
     cleanup: false
     restart_policy: unless-stopped

@@ -3,30 +3,36 @@
   file:
     path: '{{ grafana_dir }}'
     state: directory
-    mode: 0770
+    mode: 0777
+
+- name: Create grafana data dir
+  file:
+    path: '{{ grafana_dir }}/data'
+    state: directory
+    mode: 0777
 
 - name: Create data sources dir
   file:
     path: '{{ grafana_dir }}/provisioning/datasources'
     state: directory
-    mode: 0770
+    mode: 0777
 
 - name: Create dashboards dir
   file:
     path: '{{ grafana_dir }}/provisioning/dashboards'
     state: directory
-    mode: 0770
+    mode: 0777
 
 - name: Add Grafana config files
   template:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
-    mode: 0660
+    mode: 0777
   with_items:
     - src: datasource.yml
       dest: '{{ grafana_dir }}/provisioning/datasources/datasources.yml'
     - src: dashboards.yml
-      dest: '{{ grafana_dir }}/provisioning/datasources/dashboards.yml'
+      dest: '{{ grafana_dir }}/provisioning/dashboards/dashboards.yml'
     - src: docker-compose.yml
       dest: '{{ grafana_dir }}/docker-compose.yml'
     - src: dashboard.json
