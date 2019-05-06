@@ -1,0 +1,6 @@
+---
+alertmanager_image_name: quay.io/prometheus/alertmanager
+alertmanager_image_tag: latest
+alertmanager_image: '{{ alertmanager_image_name }}:{{ alertmanager_image_tag }}'
+alertmanager_container_name: alertmanager
+alertmanager_dir: /tmp/alertmanager

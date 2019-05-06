@@ -1,0 +1,33 @@
+- name: Create dirs
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0777
+  with_items:
+    - '{{ alertmanager_dir }}'
+    - '{{ alertmanager_dir }}/data'
+
+- name: Template config file
+  template:
+    src: alertmanager.yml
+    dest: '{{ alertmanager_dir }}/alertmanager.yml'
+    mode: 0777
+
+- name: Pull image
+  docker_image:
+    name: '{{ alertmanager_image }}'
+    force: true
+
+- name: Start container
+  docker_container:
+    image: '{{ alertmanager_image }}'
+    name: '{{ alertmanager_container_name }}'
+    restart_policy: unless-stopped
+    ports:
+      - '9093:9093'
+    command:
+      - '--config.file={{ alertmanager_dir }}/alertmanager.yml'
+      - '--storage.path={{ alertmanager_dir }}/data'
+      - '--web.external-url={{ alertmanager_url }}'
+    volumes:
+      - '{{ alertmanager_dir }}:{{ alertmanager_dir }}'

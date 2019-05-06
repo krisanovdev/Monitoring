@@ -1,0 +1,13 @@
+global:
+  resolve_timeout: 1m
+ 
+route:
+  group_by: [cluster, alertname]
+  repeat_interval: 5m
+  receiver: 'slack'
+
+receivers:
+- name: 'slack'
+  slack_configs:
+    - api_url: '{{ slack_webhook_url }}'
+      send_resolved: true

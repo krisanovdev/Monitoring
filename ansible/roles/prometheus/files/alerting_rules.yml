@@ -1,0 +1,38 @@
+groups:
+  - name: Node exporter
+    rules:
+      - alert: node_exporter:node_down
+        expr: up{job="node_exporter"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Instance is down
+          description: 'The instance {{ $labels.instance }} is down for the last 2 minutes.'
+      
+      - alert: node_exporter:high_memory_usage
+        expr: job:node_exporter:memory_usage_percentage > 60
+        for: 2m
+        labels:
+          severity: low
+        annotations:
+          summary: High memory usage
+          description: 'The instance {{ $labels.instance }} has above 60% memory usage for the last 2 minutes.'
+
+      - alert: node_exporter:high_cpu_usage
+        expr: job:node_exporter:cpu_usage_percentage > 50
+        for: 2m
+        labels:
+          severity: low
+        annotations:
+          summary: High CPU usage
+          description: 'The instance {{ $labels.instance }} has above 50% cpu usage for the last 2 minutes.'
+
+      - alert: node_exporter:high_disk_usage
+        expr: job:node_exporter:disk_usage_percentage > 40
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: High disk usage
+          description: 'The instance {{ $labels.instance }} has above 40% disk usage for the last 2 minutes.'

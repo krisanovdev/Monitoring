@@ -25,8 +25,8 @@
   with_items:
     - src: recording_rules.yml
       dest: '{{ prometheus_dir }}/config/rules/recording_rules.yml'
-#    - src: alerting_rules.yml
-#      dest: '{{ prometheus_dir }}/config/rules/alerting_rules.yml'
+    - src: alerting_rules.yml
+      dest: '{{ prometheus_dir }}/config/rules/alerting_rules.yml'
 
 - name: Pull docker image
   docker_image:
