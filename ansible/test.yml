@@ -1,12 +1,19 @@
 ---
 - hosts: monitoring_servers
   tasks:
+    - name: Create a network
+      docker_network:
+        name: monitoring
     - name: Test prometheus
       import_role:
        name: prometheus
     - name: Test grafana
       import_role:
         name: grafana
+    - name: Test alertmanager
+      import_role:
+        name: alertmanager
+
 - hosts: node_exporter_targets
   tasks:
     - name: Test exporter

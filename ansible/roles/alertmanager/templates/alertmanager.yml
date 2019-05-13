@@ -2,7 +2,7 @@ global:
   resolve_timeout: 1m
  
 route:
-  group_by: [cluster, alertname]
+  group_by: [alertname]
   repeat_interval: 5m
   receiver: 'slack'
 

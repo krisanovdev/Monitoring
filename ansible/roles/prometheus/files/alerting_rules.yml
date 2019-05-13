@@ -11,7 +11,7 @@ groups:
           description: 'The instance {{ $labels.instance }} is down for the last 2 minutes.'
       
       - alert: node_exporter:high_memory_usage
-        expr: job:node_exporter:memory_usage_percentage > 60
+        expr: job:node_exporter:ram_usage > 60
         for: 2m
         labels:
           severity: low
@@ -20,7 +20,7 @@ groups:
           description: 'The instance {{ $labels.instance }} has above 60% memory usage for the last 2 minutes.'
 
       - alert: node_exporter:high_cpu_usage
-        expr: job:node_exporter:cpu_usage_percentage > 50
+        expr: job:node_exporter:cpu_usage > 50
         for: 2m
         labels:
           severity: low
@@ -29,7 +29,7 @@ groups:
           description: 'The instance {{ $labels.instance }} has above 50% cpu usage for the last 2 minutes.'
 
       - alert: node_exporter:high_disk_usage
-        expr: job:node_exporter:disk_usage_percentage > 40
+        expr: job:node_exporter:disk_usage > 40
         for: 2m
         labels:
           severity: critical

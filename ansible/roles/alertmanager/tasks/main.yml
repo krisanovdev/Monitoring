@@ -22,12 +22,13 @@
   docker_container:
     image: '{{ alertmanager_image }}'
     name: '{{ alertmanager_container_name }}'
+    networks:
+      - name: monitoring
     restart_policy: unless-stopped
     ports:
-      - '9093:9093'
+      - '127.0.0.1:9093:9093'
     command:
       - '--config.file={{ alertmanager_dir }}/alertmanager.yml'
       - '--storage.path={{ alertmanager_dir }}/data'
-      - '--web.external-url={{ alertmanager_url }}'
     volumes:
       - '{{ alertmanager_dir }}:{{ alertmanager_dir }}'
