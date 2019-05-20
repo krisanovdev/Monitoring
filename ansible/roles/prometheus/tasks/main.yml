@@ -3,28 +3,28 @@
   file:
     path: '{{ item }}'
     state: directory
-    mode: 0777
-    owner: anton
-
+    mode: 0770
+    group: docker
   with_items:
+    - '{{ prometheus_dir }}'
     - '{{ prometheus_dir }}/config'
     - '{{ prometheus_dir }}/config/rules'
     - '{{ prometheus_dir }}/config/data'
-    - '{{ prometheus_dir }}/data'
+    
 
 - name: Template prometheus.yml
   template:
     src: prometheus.yml.j2
     dest: '{{ prometheus_dir }}/config/prometheus.yml'
-    mode: 0777
-    owner: anton
+    mode: 0660
+    group: docker
 
 - name: Copy rules
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
-    mode: 0777
-    owner: anton
+    mode: 0660
+    group: docker
   with_items:
     - src: recording_rules.yml
       dest: '{{ prometheus_dir }}/config/rules/recording_rules.yml'
@@ -41,7 +41,7 @@
     image: '{{ prometheus_image }}'
     name: '{{ prometheus_container_name }}'
     entrypoint: ''
-    user: root
+    user: 1000
     command:
       - promtool
       - check
@@ -71,5 +71,6 @@
       - '--storage.tsdb.retention=90d'
     volumes:
       - '{{ prometheus_dir }}/config/:{{ prometheus_dir }}/config/'
-      - '{{ prometheus_dir }}/data/:/prometheus/'
+      - '{{ prometheus_dir }}:/prometheus'
     restart: true
+    user: 1000
