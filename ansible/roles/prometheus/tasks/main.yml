@@ -10,7 +10,6 @@
     - '{{ prometheus_dir }}/config'
     - '{{ prometheus_dir }}/config/rules'
     - '{{ prometheus_dir }}/config/data'
-    
 
 - name: Template prometheus.yml
   template:

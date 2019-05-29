@@ -1,3 +1,4 @@
+---
 groups:
   - name: Node exporter
     rules:
@@ -9,7 +10,7 @@ groups:
         annotations:
           summary: Instance is down
           description: 'The instance {{ $labels.instance }} is down for the last 2 minutes.'
-      
+
       - alert: node_exporter:high_memory_usage
         expr: job:node_exporter:ram_usage > 60
         for: 2m
