@@ -1,0 +1,6 @@
+---
+- hosts: all
+  vars:
+    slack_webhook_url: "https://dummy_url"
+  roles:
+    - role: alertmanager
