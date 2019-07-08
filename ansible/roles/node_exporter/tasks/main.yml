@@ -30,8 +30,8 @@
 
 - name: Start node_exporter
   become: true
-  service:
+  systemd:
     name: node-exporter
-    state: restarted
+    daemon-reload: true
     enabled: true
-    daemon_reload: true
+    state: started
